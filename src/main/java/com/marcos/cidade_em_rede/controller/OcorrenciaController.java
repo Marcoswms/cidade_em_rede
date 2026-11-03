@@ -38,14 +38,18 @@ public class OcorrenciaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Ocorrencia>> listar() {
-        List<Ocorrencia> ocorrencias = ocorrenciaService.listarOcorrencias();
+    public ResponseEntity<List<OcorrenciaResponseDTO>> listar() {
+        List<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listarOcorrencias()
+                .stream()
+                .map(OcorrenciaResponseDTO::new)
+                .toList();
         return ResponseEntity.ok(ocorrencias);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ocorrencia> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<OcorrenciaResponseDTO> buscarPorId(@PathVariable Long id) {
         return ocorrenciaService.buscarPorId(id)
+                .map(OcorrenciaResponseDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
