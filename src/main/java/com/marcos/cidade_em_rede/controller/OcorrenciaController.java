@@ -55,8 +55,16 @@ public class OcorrenciaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Ocorrencia> atualizar(@PathVariable Long id, @Valid @RequestBody Ocorrencia dadosAtualizados) {
-        return ocorrenciaService.atualizarPorId(id, dadosAtualizados)
+    public ResponseEntity<OcorrenciaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody OcorrenciaRequestDTO dadosAtualizados) {
+        Ocorrencia ocorrencia = new Ocorrencia();
+
+        ocorrencia.setDescricao(dadosAtualizados.getDescricao());
+        ocorrencia.setCategoria(dadosAtualizados.getCategoria());
+        ocorrencia.setLatitude(dadosAtualizados.getLatitude());
+        ocorrencia.setLongitude(dadosAtualizados.getLongitude());
+
+        return ocorrenciaService.atualizarPorId(id, ocorrencia)
+                .map(OcorrenciaResponseDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
