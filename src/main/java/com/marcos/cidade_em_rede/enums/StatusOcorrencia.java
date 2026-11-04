@@ -4,7 +4,8 @@ public enum StatusOcorrencia {
 
     RECEBIDO,
     EM_ANALISE,
-    EM_ATENDIMENTO_,
+    ENCAMINHADO,
+    EM_ATENDIMENTO,
     RESOLVIDO,
     ENCERRADO
 }
