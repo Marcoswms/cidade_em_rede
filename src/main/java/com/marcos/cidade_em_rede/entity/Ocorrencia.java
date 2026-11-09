@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ocorrencias")
@@ -40,6 +42,9 @@ public class Ocorrencia {
 
     @Enumerated(EnumType.STRING)
     private StatusOcorrencia status;
+
+    @OneToMany(mappedBy = "ocorrencia")
+    private List<HistoricoStatus> historicos = new ArrayList<>();
 
     public Ocorrencia() {
 
@@ -103,5 +108,9 @@ public class Ocorrencia {
 
     public void setStatus(StatusOcorrencia status) {
         this.status = status;
+    }
+
+    public List<HistoricoStatus> getHistoricos() {
+        return historicos;
     }
 }
