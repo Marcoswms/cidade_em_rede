@@ -1,9 +1,12 @@
 package com.marcos.cidade_em_rede.service;
 
 
+import com.marcos.cidade_em_rede.entity.HistoricoStatus;
 import com.marcos.cidade_em_rede.entity.Ocorrencia;
 import com.marcos.cidade_em_rede.enums.StatusOcorrencia;
+import com.marcos.cidade_em_rede.repository.HistoricoStatusRepository;
 import com.marcos.cidade_em_rede.repository.OcorrenciaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,18 +18,31 @@ import java.util.UUID;
 public class OcorrenciaService {
 
     private final OcorrenciaRepository ocorrenciaRepository;
+    private final HistoricoStatusRepository historicoStatusRepository;
 
-    public OcorrenciaService(OcorrenciaRepository ocorrenciaRepository) {
+    public OcorrenciaService(OcorrenciaRepository ocorrenciaRepository, HistoricoStatusRepository historicoStatusRepository) {
         this.ocorrenciaRepository = ocorrenciaRepository;
+        this.historicoStatusRepository = historicoStatusRepository;
     }
 
+    @Transactional
     public Ocorrencia registrarOcorrencia(Ocorrencia ocorrencia) {
         ocorrencia.setProtocolo(
                 UUID.randomUUID().toString().replace("-", "").toUpperCase()
         );
         ocorrencia.setStatus(StatusOcorrencia.RECEBIDO);
         ocorrencia.setDataCriacao(LocalDateTime.now());
-        return ocorrenciaRepository.save(ocorrencia);
+
+        Ocorrencia ocorrenciaSalva = ocorrenciaRepository.save(ocorrencia);
+
+        HistoricoStatus historico = new HistoricoStatus();
+
+        historico.setStatus(ocorrenciaSalva.getStatus());
+        historico.setDataAlteracao(LocalDateTime.now());
+        historico.setOcorrencia(ocorrenciaSalva);
+
+        historicoStatusRepository.save(historico);
+        return ocorrenciaSalva;
     }
 
     public List<Ocorrencia> listarOcorrencias() {
