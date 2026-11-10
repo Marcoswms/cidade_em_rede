@@ -27,6 +27,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erros);
     }
 
+    @ExceptionHandler(OcorrenciaEncerradaException.class)
+    public ResponseEntity<Map<String, String>> tratarOcorrenciaEncerrada(OcorrenciaEncerradaException exception) {
+        Map<String, String> erro = new HashMap<>();
+
+        erro.put("erro", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> tratarErroInterno(Exception exception) {
         logger.error("Erro interno ao processar a requisição.", exception);
