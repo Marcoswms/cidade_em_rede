@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,6 +34,14 @@ public class GlobalExceptionHandler {
 
         erro.put("erro", exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> tratarErroLeituraJson(HttpMessageNotReadableException exception) {
+        Map<String, String> erro = new HashMap<>();
+
+        erro.put("erro", "O status informado é inválido ou o JSON está incorreto.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,9 +1,10 @@
 package com.marcos.cidade_em_rede.controller;
 
-
+import com.marcos.cidade_em_rede.dto.AtualizarStatusDTO;
 import com.marcos.cidade_em_rede.dto.OcorrenciaRequestDTO;
 import com.marcos.cidade_em_rede.dto.OcorrenciaResponseDTO;
 import com.marcos.cidade_em_rede.entity.Ocorrencia;
+import com.marcos.cidade_em_rede.enums.StatusOcorrencia;
 import com.marcos.cidade_em_rede.service.OcorrenciaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,15 @@ public class OcorrenciaController {
     @GetMapping("/{id}")
     public ResponseEntity<OcorrenciaResponseDTO> buscarPorId(@PathVariable Long id) {
         return ocorrenciaService.buscarPorId(id)
+                .map(OcorrenciaResponseDTO::new)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<OcorrenciaResponseDTO> atualizarStatus(@PathVariable Long id, @Valid @RequestBody AtualizarStatusDTO dados) {
+        StatusOcorrencia novoStatus = dados.getStatus();
+        return ocorrenciaService.atualizarStatus(id, novoStatus)
                 .map(OcorrenciaResponseDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
