@@ -1,6 +1,5 @@
 package com.marcos.cidade_em_rede.service;
 
-
 import com.marcos.cidade_em_rede.entity.HistoricoStatus;
 import com.marcos.cidade_em_rede.entity.Ocorrencia;
 import com.marcos.cidade_em_rede.enums.StatusOcorrencia;
