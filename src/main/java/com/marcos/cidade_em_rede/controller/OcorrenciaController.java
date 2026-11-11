@@ -4,6 +4,7 @@ import com.marcos.cidade_em_rede.dto.AtualizarStatusDTO;
 import com.marcos.cidade_em_rede.dto.OcorrenciaRequestDTO;
 import com.marcos.cidade_em_rede.dto.OcorrenciaResponseDTO;
 import com.marcos.cidade_em_rede.entity.Ocorrencia;
+import com.marcos.cidade_em_rede.enums.CategoriaOcorrencia;
 import com.marcos.cidade_em_rede.enums.StatusOcorrencia;
 import com.marcos.cidade_em_rede.service.OcorrenciaService;
 import jakarta.validation.Valid;
@@ -53,6 +54,45 @@ public class OcorrenciaController {
                 .map(OcorrenciaResponseDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/protocolo/{protocolo}")
+    public ResponseEntity<OcorrenciaResponseDTO> buscarPorProtocolo(@PathVariable String protocolo) {
+        return ocorrenciaService.buscarPorProtocolo(protocolo)
+                .map(OcorrenciaResponseDTO::new)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<List<OcorrenciaResponseDTO>> listarPorCategoria(@PathVariable CategoriaOcorrencia categoria) {
+        List<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listarPorCategoria(categoria)
+                .stream()
+                .map(OcorrenciaResponseDTO::new)
+                .toList();
+
+        return ResponseEntity.ok(ocorrencias);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<OcorrenciaResponseDTO>> listarPorStatus(@PathVariable StatusOcorrencia status) {
+        List<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listarPorStatus(status)
+                        .stream()
+                        .map(OcorrenciaResponseDTO::new)
+                        .toList();
+
+        return ResponseEntity.ok(ocorrencias);
+    }
+
+    @GetMapping("/filtros")
+    public ResponseEntity<List<OcorrenciaResponseDTO>> filtrar(@RequestParam CategoriaOcorrencia categoria, @RequestParam StatusOcorrencia status) {
+
+        List<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listarPorCategoriaEStatus(categoria, status)
+                        .stream()
+                        .map(OcorrenciaResponseDTO::new)
+                        .toList();
+
+        return ResponseEntity.ok(ocorrencias);
     }
 
     @PatchMapping("/{id}/status")
