@@ -2,6 +2,7 @@ package com.marcos.cidade_em_rede.service;
 
 import com.marcos.cidade_em_rede.entity.HistoricoStatus;
 import com.marcos.cidade_em_rede.entity.Ocorrencia;
+import com.marcos.cidade_em_rede.enums.CategoriaOcorrencia;
 import com.marcos.cidade_em_rede.enums.StatusOcorrencia;
 import com.marcos.cidade_em_rede.exception.OcorrenciaEncerradaException;
 import com.marcos.cidade_em_rede.repository.HistoricoStatusRepository;
@@ -47,6 +48,22 @@ public class OcorrenciaService {
 
     public List<Ocorrencia> listarOcorrencias() {
         return ocorrenciaRepository.findAll();
+    }
+
+    public Optional<Ocorrencia> buscarPorProtocolo(String protocolo) {
+        return ocorrenciaRepository.findByProtocolo(protocolo);
+    }
+
+    public List<Ocorrencia> listarPorCategoria(CategoriaOcorrencia categoria) {
+        return ocorrenciaRepository.findByCategoria(categoria);
+    }
+
+    public List<Ocorrencia> listarPorStatus(StatusOcorrencia status) {
+        return ocorrenciaRepository.findByStatus(status);
+    }
+
+    public List<Ocorrencia> listarPorCategoriaEStatus(CategoriaOcorrencia categoria, StatusOcorrencia status) {
+        return ocorrenciaRepository.findByCategoriaAndStatus(categoria, status);
     }
 
     public Optional<Ocorrencia> buscarPorId(Long id) {
