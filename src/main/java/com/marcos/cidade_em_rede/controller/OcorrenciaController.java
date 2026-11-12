@@ -8,6 +8,10 @@ import com.marcos.cidade_em_rede.enums.CategoriaOcorrencia;
 import com.marcos.cidade_em_rede.enums.StatusOcorrencia;
 import com.marcos.cidade_em_rede.service.OcorrenciaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +52,19 @@ public class OcorrenciaController {
         return ResponseEntity.ok(ocorrencias);
     }
 
+    @GetMapping("/paginadas")
+    public ResponseEntity<Page<OcorrenciaResponseDTO>> listarPaginadas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "dataCriacao,desc") String[] sort) {
+        Sort.Direction direcao = Sort.Direction.fromString(sort[1]);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direcao, sort[0]));
+
+        Page<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listatOcorrenciasPaginadas(pageable).map(OcorrenciaResponseDTO::new);
+        return ResponseEntity.ok(ocorrencias);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<OcorrenciaResponseDTO> buscarPorId(@PathVariable Long id) {
         return ocorrenciaService.buscarPorId(id)
@@ -77,9 +94,9 @@ public class OcorrenciaController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<OcorrenciaResponseDTO>> listarPorStatus(@PathVariable StatusOcorrencia status) {
         List<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listarPorStatus(status)
-                        .stream()
-                        .map(OcorrenciaResponseDTO::new)
-                        .toList();
+                .stream()
+                .map(OcorrenciaResponseDTO::new)
+                .toList();
 
         return ResponseEntity.ok(ocorrencias);
     }
@@ -88,9 +105,9 @@ public class OcorrenciaController {
     public ResponseEntity<List<OcorrenciaResponseDTO>> filtrar(@RequestParam CategoriaOcorrencia categoria, @RequestParam StatusOcorrencia status) {
 
         List<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listarPorCategoriaEStatus(categoria, status)
-                        .stream()
-                        .map(OcorrenciaResponseDTO::new)
-                        .toList();
+                .stream()
+                .map(OcorrenciaResponseDTO::new)
+                .toList();
 
         return ResponseEntity.ok(ocorrencias);
     }
