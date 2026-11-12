@@ -61,7 +61,7 @@ public class OcorrenciaController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(direcao, sort[0]));
 
-        Page<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listatOcorrenciasPaginadas(pageable).map(OcorrenciaResponseDTO::new);
+        Page<OcorrenciaResponseDTO> ocorrencias = ocorrenciaService.listaOcorrenciasPaginadas(pageable).map(OcorrenciaResponseDTO::new);
         return ResponseEntity.ok(ocorrencias);
     }
 

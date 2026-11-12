@@ -68,7 +68,7 @@ public class OcorrenciaService {
         return ocorrenciaRepository.findByCategoriaAndStatus(categoria, status);
     }
 
-    public Page<Ocorrencia> listatOcorrenciasPaginadas(Pageable pageable) {
+    public Page<Ocorrencia> listaOcorrenciasPaginadas(Pageable pageable) {
         return ocorrenciaRepository.findAll(pageable);
     }
 
