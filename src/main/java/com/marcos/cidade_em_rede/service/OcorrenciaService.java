@@ -8,6 +8,8 @@ import com.marcos.cidade_em_rede.exception.OcorrenciaEncerradaException;
 import com.marcos.cidade_em_rede.repository.HistoricoStatusRepository;
 import com.marcos.cidade_em_rede.repository.OcorrenciaRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -64,6 +66,22 @@ public class OcorrenciaService {
 
     public List<Ocorrencia> listarPorCategoriaEStatus(CategoriaOcorrencia categoria, StatusOcorrencia status) {
         return ocorrenciaRepository.findByCategoriaAndStatus(categoria, status);
+    }
+
+    public Page<Ocorrencia> listatOcorrenciasPaginadas(Pageable pageable) {
+        return ocorrenciaRepository.findAll(pageable);
+    }
+
+    public Page<Ocorrencia> listarPorcategoriaPaginada(CategoriaOcorrencia categoria, Pageable pageable) {
+        return ocorrenciaRepository.findByCategoria(categoria, pageable);
+    }
+
+    public Page<Ocorrencia> listarPorStatusPaginado(StatusOcorrencia status, Pageable pageable) {
+        return ocorrenciaRepository.findByStatus(status, pageable);
+    }
+
+    public Page<Ocorrencia> listarPorCategoriaEStatusPaginadas(CategoriaOcorrencia categoria, StatusOcorrencia status, Pageable pageable) {
+        return ocorrenciaRepository.findByCategoriaAndStatus(categoria, status, pageable);
     }
 
     public Optional<Ocorrencia> buscarPorId(Long id) {
